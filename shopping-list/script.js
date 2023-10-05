@@ -18,16 +18,6 @@ function onAddItemSubmit(e) {
 
   if (newItem === '') alert('Please add an item');
 
-  //   Create List Item
-  const li = document.createElement('li');
-  li.appendChild(document.createTextNode(newItem));
-
-  const button = createButton('remove-item btn-link text-red');
-  li.appendChild(button);
-
-  // Add li to DOM
-  itemList.append(li);
-
   // Crete item to DOM
   addItemToDOM(newItem);
 
@@ -82,26 +72,47 @@ function getItemsFromStorage() {
   if (localStorage.getItem('items') === null) {
     itemsFromStorage = [];
   } else {
-    itemsFromStorage = JSON.parse(localStorage.getItem('item'));
+    itemsFromStorage = JSON.parse(localStorage.getItem('items'));
   }
 
   return itemsFromStorage;
 }
 
-function removeItem(e) {
+function onClickItem(e) {
   if (e.target.parentElement.className.includes('remove-item')) {
-    if (confirm('Are you sure?')) {
-      e.target.parentElement.parentElement.remove();
-
-      checkUI();
-    }
+    removeItem(e.target.parentElement.parentElement);
   }
+}
+
+function removeItem(item) {
+  if (confirm('Are you sure?')) {
+    // Remove item from DOM
+    item.remove();
+
+    // Remove item from Storage
+    removeItemFromStorage(item.textContent);
+
+    checkUI();
+  }
+}
+
+function removeItemFromStorage(item) {
+  let itemsFromStorage = getItemsFromStorage();
+
+  // Filter out item to be removed
+  itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
+
+  // Reset to local storage
+  localStorage.setItem('items', JSON.stringify(itemsFromStorage));
 }
 
 function clearItems() {
   while (itemList.firstChild) itemList.removeChild(itemList.firstChild);
+
+  // Clear from localStorage
+  localStorage.removeItem('items');
+
   checkUI();
-  localStorage.clear();
 }
 
 function filterItems(e) {
@@ -134,7 +145,7 @@ function checkUI() {
 function init() {
   // Event listeners
   itemForm.addEventListener('submit', onAddItemSubmit);
-  itemList.addEventListener('click', removeItem);
+  itemList.addEventListener('click', onClickItem);
   clearBtn.addEventListener('click', clearItems);
   itemFilter.addEventListener('input', filterItems);
   document.addEventListener('DOMContentLoaded', displayItems);
