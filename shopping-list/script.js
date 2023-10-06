@@ -27,8 +27,15 @@ function onAddItemSubmit(e) {
   if (isEditMode) {
     const itemToEdit = itemList.querySelector('.edit-mode');
 
-    removeItemFromStorage(itemToEdit.textContent);
     itemToEdit.classList.remove('edit-mode');
+    if (checkIfItemExist(newItem)) {
+      alert('Item already exists');
+      checkUI();
+
+      itemInput.value = '';
+      return;
+    }
+    removeItemFromStorage(itemToEdit.textContent);
     itemToEdit.remove();
     isEditMode = false;
   }
@@ -96,9 +103,14 @@ function getItemsFromStorage() {
 function onClickItem(e) {
   if (e.target.parentElement.className.includes('remove-item')) {
     removeItem(e.target.parentElement.parentElement);
-  } else {
+  } else if (e.target.id !== 'item-list') {
     setItemToEdit(e.target);
   }
+}
+
+function checkIfItemExist(item) {
+  const itemsFromStorage = getItemsFromStorage();
+  return itemsFromStorage.includes(item);
 }
 
 function setItemToEdit(item) {
