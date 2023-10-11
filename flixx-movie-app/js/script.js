@@ -8,6 +8,8 @@ async function displayPopularMovies() {
 
   results.forEach((movie) => {
     const div = document.createElement('div');
+    const date = new Date(movie.release_date).toString().slice(4, 16);
+    console.log(date);
     div.classList.add('card');
     div.innerHTML = `
           <a href="movie-details.html?id=${movie.id}">
@@ -20,7 +22,7 @@ async function displayPopularMovies() {
           <div class="card-body">
             <h5 class="card-title">${movie.title}</h5>
             <p class="card-text">
-              <small class="text-muted">Release: ${movie.release_date}</small>
+              <small class="text-muted">Release: ${date}</small>
             </p>
           </div>
     `;
@@ -30,16 +32,30 @@ async function displayPopularMovies() {
 
 // Fetch Data
 async function fetchAPIData(endpoint) {
-  const API_KEY = '';
+  const API_KEY = 'd9fb704b50eac91f3d133a3624384a41';
   const API_URL = 'https://api.themoviedb.org/3/';
+
+  showSpinner();
 
   const response = await fetch(
     `${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`
   );
 
   const data = await response.json();
+  console.log(data);
+
+  hideSpinner();
 
   return data;
+}
+
+// Show Spinner
+function showSpinner() {
+  document.querySelector('.spinner').classList.add('show');
+}
+// Hide Spinner
+function hideSpinner() {
+  document.querySelector('.spinner').classList.remove('show');
 }
 
 // Highlight Active Link
