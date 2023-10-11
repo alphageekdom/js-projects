@@ -32,7 +32,7 @@ async function displayPopularMovies() {
 
 // Fetch Data
 async function fetchAPIData(endpoint) {
-  const API_KEY = 'd9fb704b50eac91f3d133a3624384a41';
+  const API_KEY = '';
   const API_URL = 'https://api.themoviedb.org/3/';
 
   showSpinner();
