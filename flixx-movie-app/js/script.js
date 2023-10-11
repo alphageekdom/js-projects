@@ -4,7 +4,7 @@ const global = {
 
 // Display Popular
 async function displayPopularMovies() {
-  const { results } = await fetchAPIData('movie/popular');
+  const { results } = await fetchAPIData('movie/top_rated');
 
   results.forEach((movie) => {
     const div = document.createElement('div');
@@ -32,7 +32,7 @@ async function displayPopularMovies() {
 
 // Display TV Shows
 async function displayPopularShows() {
-  const { results } = await fetchAPIData('tv/popular');
+  const { results } = await fetchAPIData('tv/top_rated');
 
   results.forEach((show) => {
     const div = document.createElement('div');
@@ -208,8 +208,8 @@ function displayBackgroundImage(type, backgroundPath) {
   }
 }
 
-async function displaySlider() {
-  const { results } = await fetchAPIData('movie/top_rated');
+async function displayMovieSlider() {
+  const { results } = await fetchAPIData('movie/popular');
 
   results.forEach((movie) => {
     const div = document.createElement('div');
@@ -230,7 +230,7 @@ async function displaySlider() {
   });
 }
 async function displayShowSlider() {
-  const { results } = await fetchAPIData('tv/top_rated');
+  const { results } = await fetchAPIData('tv/popular');
 
   results.forEach((show) => {
     const div = document.createElement('div');
@@ -339,7 +339,7 @@ function init() {
   switch (global.currentPage) {
     case '/':
     case '/index.html':
-      displaySlider();
+      displayMovieSlider();
       displayPopularMovies();
       break;
     case '/shows.html':
