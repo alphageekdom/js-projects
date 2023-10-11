@@ -97,6 +97,10 @@ ul {
   text-transform: uppercase;
 }
 
+.main-header .logo a:hover {
+  color: var(--color-secondary);
+}
+
 .main-header ul {
   display: flex;
 }
