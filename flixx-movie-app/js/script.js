@@ -9,7 +9,6 @@ async function displayPopularMovies() {
   results.forEach((movie) => {
     const div = document.createElement('div');
     const date = new Date(movie.release_date).toString().slice(4, 16);
-    console.log(date);
     div.classList.add('card');
     div.innerHTML = `
           <a href="movie-details.html?id=${movie.id}">
@@ -30,6 +29,33 @@ async function displayPopularMovies() {
   });
 }
 
+// Display TV Shows
+async function displayPopularShows() {
+  const { results } = await fetchAPIData('tv/popular');
+
+  results.forEach((show) => {
+    const div = document.createElement('div');
+    const date = new Date(show.first_air_date).toString().slice(4, 16);
+    div.classList.add('card');
+    div.innerHTML = `
+          <a href="tv-details.html?id=${show.id}">
+            ${
+              show.poster_path
+                ? `<img src="https://image.tmdb.org/t/p/w500${show.poster_path}" class="card-img-top" alt="${show.name}" />`
+                : `<img src="../images/no-image.jpg" class="card-img-top" alt="${show.name}" />`
+            }
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">${show.name}</h5>
+            <p class="card-text">
+              <small class="text-muted">Air Date: ${date}</small>
+            </p>
+          </div>
+    `;
+    document.querySelector('#popular-shows').appendChild(div);
+  });
+}
+
 // Fetch Data
 async function fetchAPIData(endpoint) {
   const API_KEY = '';
@@ -42,7 +68,6 @@ async function fetchAPIData(endpoint) {
   );
 
   const data = await response.json();
-  console.log(data);
 
   hideSpinner();
 
@@ -77,7 +102,7 @@ function init() {
       displayPopularMovies();
       break;
     case '/shows.html':
-      console.log('Shows');
+      displayPopularShows();
       break;
     case '/movie-details.html':
       console.log('Movie Details');
