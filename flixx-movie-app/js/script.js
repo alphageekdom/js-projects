@@ -8,7 +8,6 @@ async function displayPopularMovies() {
 
   results.forEach((movie) => {
     const div = document.createElement('div');
-    const date = new Date(movie.release_date).toString().slice(4, 16);
     div.classList.add('card');
     div.innerHTML = `
           <a href="movie-details.html?id=${movie.id}">
@@ -21,7 +20,9 @@ async function displayPopularMovies() {
           <div class="card-body">
             <h5 class="card-title">${movie.title}</h5>
             <p class="card-text">
-              <small class="text-muted">Release: ${date}</small>
+              <small class="text-muted">Release: ${formatDate(
+                movie.release_date
+              )}</small>
             </p>
           </div>
     `;
@@ -35,7 +36,6 @@ async function displayPopularShows() {
 
   results.forEach((show) => {
     const div = document.createElement('div');
-    const date = new Date(show.first_air_date).toString().slice(4, 16);
     div.classList.add('card');
     div.innerHTML = `
           <a href="tv-details.html?id=${show.id}">
@@ -48,12 +48,93 @@ async function displayPopularShows() {
           <div class="card-body">
             <h5 class="card-title">${show.name}</h5>
             <p class="card-text">
-              <small class="text-muted">Air Date: ${date}</small>
+              <small class="text-muted">Air Date: ${formatDate(
+                show.first_air_date
+              )}</small>
             </p>
           </div>
     `;
     document.querySelector('#popular-shows').appendChild(div);
   });
+}
+
+// Display Movie Details
+async function displayMovieDetails() {
+  const movieId = window.location.search.split('=')[1];
+  const movie = await fetchAPIData(`movie/${movieId}`);
+  const div = document.createElement('div');
+
+  div.innerHTML = `
+  <div class="details-top">
+          <div>
+          ${
+            movie.poster_path
+              ? `<img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" class="card-img-top" alt="${movie.title}" />`
+              : `<img src="../images/no-image.jpg" class="card-img-top" alt="${movie.title}" />`
+          }
+          </div>
+          <div>
+            <h2>${movie.title}</h2>
+            <p>
+              <i class="fas fa-star text-primary"></i>
+              ${movie.vote_average.toFixed(2)} / 10
+            </p>
+            <p class="text-muted">Release Date: ${formatDate(
+              movie.release_date
+            )}</p>
+            <p>
+              ${movie.overview}
+            </p>
+            <h5>Genres</h5>
+            <ul class="list-group">
+            ${movie.genres.map((genre) => `<li>${genre.name}</li>`).join('')}
+            </ul>
+            <a href="${
+              movie.homepage
+            }" target="_blank" class="btn">Visit Movie Homepage</a>
+          </div>
+        </div>
+        <div class="details-bottom">
+          <h2>Movie Info</h2>
+          <ul>
+            <li><span class="text-secondary">Budget:</span> $${formatCurrency(
+              movie.budget
+            )}</li>
+            <li><span class="text-secondary">Revenue:</span> $${formatCurrency(
+              movie.revenue
+            )}</li>
+            <li><span class="text-secondary">Runtime:</span> ${formatRuntime(
+              movie.runtime
+            )}</li>
+            <li><span class="text-secondary">Status:</span> ${movie.status}</li>
+          </ul>
+          <h4>Production Companies</h4>
+          <div class="list-group">${movie.production_companies
+            .map((company) => `<span>${company.name}</span>`)
+            .join(', ')}</div>
+        </div>
+  `;
+
+  document.querySelector('#movie-details').appendChild(div);
+}
+
+// Format Currency
+function formatCurrency(number) {
+  return new Intl.NumberFormat('en-US').format(number);
+}
+
+// Format Date
+function formatDate(date) {
+  return new Date(date).toString().slice(4, 16);
+}
+
+// Format Runtime
+function formatRuntime(minutes) {
+  let total = minutes;
+  let hrs = Math.floor(total / 60);
+  let min = total % 60;
+
+  return hrs + 'h ' + min + 'm';
 }
 
 // Fetch Data
@@ -105,7 +186,7 @@ function init() {
       displayPopularShows();
       break;
     case '/movie-details.html':
-      console.log('Movie Details');
+      displayMovieDetails();
       break;
     case '/tv-details.html':
       console.log('TV Details');
