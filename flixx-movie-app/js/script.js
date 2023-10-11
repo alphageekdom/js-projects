@@ -124,7 +124,6 @@ async function displayMovieDetails() {
 async function displayShowDetails() {
   const showId = window.location.search.split('=')[1];
   const show = await fetchAPIData(`tv/${showId}`);
-  console.log(show);
   const div = document.createElement('div');
 
   //   Overlay Background Image
@@ -210,7 +209,7 @@ function displayBackgroundImage(type, backgroundPath) {
 }
 
 async function displaySlider() {
-  const { results } = await fetchAPIData('movie/now_playing');
+  const { results } = await fetchAPIData('movie/top_rated');
 
   results.forEach((movie) => {
     const div = document.createElement('div');
@@ -222,6 +221,27 @@ async function displaySlider() {
       </a>
       <h4 class="swiper-rating">
         <i class="fas fa-star text-secondary"></i> ${movie.vote_average} / 10
+      </h4>
+    `;
+
+    document.querySelector('.swiper-wrapper').appendChild(div);
+
+    initSwiper();
+  });
+}
+async function displayShowSlider() {
+  const { results } = await fetchAPIData('tv/top_rated');
+
+  results.forEach((show) => {
+    const div = document.createElement('div');
+    div.classList.add('swiper-slide');
+
+    div.innerHTML = `
+      <a href="movie-details.html?id=${show.id}">
+        <img src="https://image.tmdb.org/t/p/w500${show.poster_path}" alt="${show.title}" />
+      </a>
+      <h4 class="swiper-rating">
+        <i class="fas fa-star text-secondary"></i> ${show.vote_average} / 10
       </h4>
     `;
 
@@ -323,6 +343,7 @@ function init() {
       displayPopularMovies();
       break;
     case '/shows.html':
+      displayShowSlider();
       displayPopularShows();
       break;
     case '/movie-details.html':
