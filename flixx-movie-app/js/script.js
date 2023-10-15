@@ -8,7 +8,7 @@ const global = {
     totalResults: 0,
   },
   api: {
-    apiKey: '',
+    apiKey: 'd9fb704b50eac91f3d133a3624384a41',
     apiUrl: 'https://api.themoviedb.org/3/',
   },
 };
