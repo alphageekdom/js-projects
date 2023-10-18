@@ -151,6 +151,10 @@ form label {
   background: orange;
 }
 
+.tag-science {
+  background-color: lightslategray;
+}
+
 .delete {
   position: absolute;
   top: 10px;
