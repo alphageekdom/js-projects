@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 require('dotenv').config();
 
@@ -7,6 +8,9 @@ const connectDB = require('./config/db');
 connectDB();
 
 const app = express();
+
+// Static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Body parser middleware
 app.use(express.json());
