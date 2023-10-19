@@ -23,7 +23,7 @@ class IdeaForm {
       return;
     }
 
-    // Save user localstorage
+    // Save user to local storage
     localStorage.setItem('username', this._form.elements.username.value);
 
     const idea = {
@@ -31,10 +31,11 @@ class IdeaForm {
       tag: this._form.elements.tag.value,
       username: this._form.elements.username.value,
     };
-    // Add Idea to Server
+
+    // Add idea to server
     const newIdea = await IdeasApi.createIdea(idea);
 
-    // Add Idea to list
+    // Add idea to list
     this._ideaList.addIdeaToList(newIdea.data.data);
 
     // Clear fields
@@ -50,26 +51,23 @@ class IdeaForm {
   render() {
     this._formModal.innerHTML = `
     <form id="idea-form">
-      <div class="form-control">
-        <label for="idea-text">Enter a Username</label>
-        <input type="text" name="username" id="username" value="${
-          localStorage.getItem('username')
-            ? localStorage.getItem('username')
-            : ''
-        }"/>
-      </div>
-      <div class="form-control">
-        <label for="idea-text">What's Your Idea?</label>
-        <textarea name="text" id="idea-text"></textarea>
-      </div>
-      <div class="form-control">
-        <label for="tag">Tag</label>
-        <input type="text" name="tag" id="tag" />
-      </div>
-      <button class="btn" type="submit" id="submit">Submit</button>
-    </form>
+    <div class="form-control">
+      <label for="idea-text">Enter a Username</label>
+      <input type="text" name="username" id="username" value="${
+        localStorage.getItem('username') ? localStorage.getItem('username') : ''
+      }" />
+    </div>
+    <div class="form-control">
+      <label for="idea-text">What's Your Idea?</label>
+      <textarea name="text" id="idea-text"></textarea>
+    </div>
+    <div class="form-control">
+      <label for="tag">Tag</label>
+      <input type="text" name="tag" id="tag" />
+    </div>
+    <button class="btn" type="submit" id="submit">Submit</button>
+  </form>
     `;
-
     this._form = document.querySelector('#idea-form');
     this.addEventListeners();
   }
